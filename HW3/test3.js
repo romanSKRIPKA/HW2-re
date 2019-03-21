@@ -10,6 +10,7 @@ function startTime() {
  let currentDate = Date.now();
  let t = currentDate - initialDate;
  pauseDate = t;
+ 
  let ms = t%1000;
 
  t-=ms;
@@ -29,13 +30,14 @@ function startTime() {
  if (s<10) s='0'+s;
  if (ms<10) ms='0'+ms;
  clock.value = h + ':' + m + ':' + s + '.' + ms;
-
+ clocktimer = setTimeout(startTime,1); // усложняеш рекурсией. более правильно було б визивать startTime() внутри findTime() через setInterval(), а не визивать саму в собі через setTimeout()
  }
  
 function findTime() {
   if (start.value === 'Start') {
     initialDate = Date.now();
-    clocktimer = setInterval(startTime,1);
+    startTime();
+    // setInterval(startTime, 1); - це про то шо я више написав
     start.value = 'Pause'; 
   }
   else if (start.value === 'Pause') {
