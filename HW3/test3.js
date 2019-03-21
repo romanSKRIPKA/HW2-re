@@ -1,46 +1,62 @@
 
- var init=0;
- var startDate;
- var clocktimer;
+var clock = document.getElementById('time');
+var start = document.getElementById('butt1');
+var pauses = document.getElementById('text');
+var pauseDate;
+var clocktimer;
  
- function startTime() { 
-  var currentDate = new Date;
-  t = new Date (currentDate - initialDate);
-  var ms = t.getMilliseconds();
-  var s = t.getSeconds();
-  var m = t.getMinutes();
-  var h = t.getUTCHours();
-  var result = h + m + s + ms;
+function startTime() { 
+
+ let currentDate = Date.now();
+ let t = currentDate - initialDate;
+ pauseDate = t;
+ 
+ let ms = t%1000;
+
+ t-=ms;
+ t = Math.floor (t/1000);
+ let s = t%60; 
   
-  if (h<10) h='0'+h;
-  if (m<10) m='0'+m;
-  if (s<10) s='0'+s;
-  if (ms<10) ms='0'+ms;
-  document.clockform.clock.value = h + ':' + m + ':' + s + '.' + ms;
-  clocktimer = setTimeout("startTime()",1);
+ t-=s;
+ t = Math.floor (t/60);
+ let m = t%60; 
+  
+ t-=m;
+ t = Math.floor (t/60);
+ let h = t%60;
+  
+ if (h<10) h='0'+h;
+ if (m<10) m='0'+m;
+ if (s<10) s='0'+s;
+ if (ms<10) ms='0'+ms;
+ clock.value = h + ':' + m + ':' + s + '.' + ms;
+ clocktimer = setTimeout(startTime,1);
  }
  
-
- function findTime() {
-   if (document.clockform.start.value === 'Start') {
-    initialDate = new Date;
+function findTime() {
+  if (start.value === 'Start') {
+    initialDate = Date.now();
     startTime();
-    document.clockform.start.value = 'Pause'; 
+    start.value = 'Pause'; 
   }
-   else if (document.clockform.start.value === 'Pause') {
-    document.clockform.start.value = 'Continue'; 
-    clearTimeout(clocktimer);
+  else if (start.value === 'Pause') {
+    pauses.innerHTML = clock.value + '<br>' + pauses.innerHTML; 
   }
-   else if (document.clockform.start.value === 'Continue') {
-    clearTimeout(clocktimer);
+  else if (start.value === 'Continue') {
+    initialDate = Date.now() - pauseDate;
     startTime();  
-    document.clockform.start.value = 'Pause';
+    start.value = 'Pause';
   }
 }
-   
-  function clearField() {
+
+ function stopTime() {
     clearTimeout(clocktimer);
-    document.clockform.clock.value='00:00:00.000';
-    document.clockform.start.value = 'Start';
+ } 
+   
+ function clearField() {
+    clearTimeout(clocktimer);
+    clock.value='00:00:00.000';
+    start.value = 'Start';
+    pauses.innerHTML = '';
   }
 
