@@ -7,23 +7,23 @@ var clocktimer;
  
 function startTime() { 
 
- let currentDate = Date.now();
- let t = currentDate - initialDate;
- pauseDate = t;
+  let currentDate = Date.now();
+  let t = currentDate - initialDate;
+  pauseDate = t;
  
- let ms = t%1000;
+  let ms = t%1000;
 
- t-=ms;
- t = Math.floor (t/1000);
- let s = t%60; 
+  t-=ms;
+  t = Math.floor (t/1000);
+  let s = t%60; 
   
- t-=s;
- t = Math.floor (t/60);
- let m = t%60; 
+  t-=s;
+  t = Math.floor (t/60);
+  let m = t%60; 
   
- t-=m;
- t = Math.floor (t/60);
- let h = t%60;
+  t-=m;
+  t = Math.floor (t/60);
+  let h = t%60;
   
  if (h<10) h='0'+h;
  if (m<10) m='0'+m;
@@ -35,13 +35,15 @@ function startTime() {
  
 function findTime() {
   if (start.value === 'Start') {
-    initialDate = Date.now();
+    initialDate = Date.now(); // initialDate нада б обявить глобальной переменной в начале файла, а то я кось не понятно откуда вона вдруг всплила внутри функции
     startTime();
     // setInterval(startTime, 1); - це про то шо я више написав
     start.value = 'Pause'; 
   }
   else if (start.value === 'Pause') {
-    pauses.innerHTML = clock.value + '<br>' + pauses.innerHTML; 
+    clearTimeout(clocktimer);
+    pauses.innerHTML = clock.value + '<br>' + pauses.innerHTML;
+    start.value = 'Continue';
   }
   else if (start.value === 'Continue') {
     initialDate = Date.now() - pauseDate;
@@ -49,15 +51,11 @@ function findTime() {
     start.value = 'Pause';
   }
 }
-
- function stopTime() {
-    clearTimeout(clocktimer);
- } 
-   
- function clearField() {
-    clearTimeout(clocktimer);
-    clock.value='00:00:00.000';
-    start.value = 'Start';
-    pauses.innerHTML = '';
-  }
+    
+function clearField() {
+  clearTimeout(clocktimer);
+  clock.value='00:00:00.000';
+  start.value = 'Start';
+  pauses.innerHTML = '';
+}
 
